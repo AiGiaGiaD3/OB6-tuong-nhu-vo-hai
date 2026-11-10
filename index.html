@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FBF7F2">
+<title>Tưởng chừng vô hại · OB6</title>
+<style>
+:root{
+  --red:#E81B2E;--red-d:#B5121F;--red-s:#FFF1F2;--ink:#232323;--mute:#7A7570;--line:#ECE4DA;
+  --cream:#FBF7F2;--paper:#FFFFFF;--mist:#F3EDE6;--ok:#1F8A62;--ok-s:#E8F6EF;--gold:#E9A21B;--gold-s:#FFF6E0;
+  --sh:0 18px 40px rgba(80,40,20,.10),0 3px 8px rgba(80,40,20,.06);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:var(--cream);min-height:100dvh;overflow-x:hidden}
+button{font:inherit;color:inherit}
+
+/* ---------- Decorative background ---------- */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(40px);opacity:.55;animation:drift 18s ease-in-out infinite alternate}
+.blob.b1{width:340px;height:340px;background:#FFD9D4;top:-110px;left:-90px}
+.blob.b2{width:300px;height:300px;background:#FBE8C8;bottom:-100px;right:-80px;animation-delay:-6s}
+.blob.b3{width:200px;height:200px;background:#FDE2E6;top:45%;right:-90px;animation-delay:-11s}
+@keyframes drift{to{transform:translate(30px,40px) scale(1.08)}}
+.dots{position:absolute;inset:0;background-image:radial-gradient(#E9DCCD 1.2px,transparent 1.2px);background-size:22px 22px;opacity:.45;
+  -webkit-mask-image:linear-gradient(180deg,#000 0,transparent 55%);mask-image:linear-gradient(180deg,#000 0,transparent 55%)}
+.spark{position:absolute;color:#F2B9BE;animation:twinkle 3.2s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.25;transform:scale(.8) rotate(0)}50%{opacity:1;transform:scale(1.1) rotate(20deg)}}
+
+/* ---------- Layout ---------- */
+.app{position:relative;z-index:1;width:100%;max-width:560px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;
+  padding:calc(14px + env(safe-area-inset-top)) 18px calc(20px + env(safe-area-inset-bottom))}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:8px;white-space:nowrap;font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--red)}
+.brand i{width:26px;height:26px;border-radius:9px;background:var(--red);display:grid;place-items:center;box-shadow:0 4px 10px rgba(232,27,46,.3)}
+.brand span{color:var(--mute);font-weight:400}
+@media(max-width:380px){.brand span{display:none}}
+.tright{display:flex;align-items:center;gap:8px}
+.pill{white-space:nowrap;font-size:12px;font-weight:700;padding:7px 12px;border-radius:99px;background:rgba(255,255,255,.75);border:1px solid var(--line);color:var(--mute);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.icon-btn{width:36px;height:36px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.75);display:grid;place-items:center;cursor:pointer;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:transform .15s}
+.icon-btn:active{transform:scale(.9)}
+.screen{display:none;flex:1;flex-direction:column}
+.screen.on{display:flex;animation:enter .5s cubic-bezier(.2,.8,.2,1)}
+@keyframes enter{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+h1{font-size:34px;line-height:1.15;letter-spacing:-.02em}
+h1 em{font-style:normal;color:var(--red);position:relative;white-space:nowrap}
+h1 em:after{content:"";position:absolute;left:0;right:0;bottom:2px;height:10px;background:#FBD3D7;z-index:-1;border-radius:6px;transform-origin:left;animation:mark .8s .4s both cubic-bezier(.2,.8,.2,1)}
+@keyframes mark{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.lead{font-size:16px;line-height:1.6;color:#55504A;margin-top:12px}
+
+/* ---------- Intro ---------- */
+.hero-ill{width:100%;max-width:320px;margin:4px auto 10px;display:block}
+.float{animation:float 4s ease-in-out infinite}
+.float.d1{animation-delay:-1.3s}.float.d2{animation-delay:-2.6s}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.choose{display:grid;gap:12px;margin-top:22px}
+.opt{position:relative;display:flex;align-items:center;gap:14px;text-align:left;background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:var(--sh);
+  cursor:pointer;transition:transform .2s var(--spring),box-shadow .2s;width:100%}
+.opt:hover{transform:translateY(-2px)}
+.opt:active{transform:scale(.98)}
+.opt b{display:block;font-size:16px}
+.opt small{display:block;color:var(--mute);font-size:13px;margin-top:4px;line-height:1.4}
+.opt .ic{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:24px;flex:none}
+.opt .ic.r1{background:linear-gradient(135deg,#E8F6EF,#CFEBDD)}
+.opt .ic.r2{background:linear-gradient(135deg,#FFE7E9,#FBD3D7)}
+.opt .go{margin-left:auto;flex:none;width:30px;height:30px;border-radius:50%;background:var(--mist);display:grid;place-items:center;color:var(--mute)}
+.badge-done{position:absolute;top:-8px;right:14px;background:var(--ok);color:#fff;font-size:11px;font-weight:700;padding:4px 9px;border-radius:99px;box-shadow:0 4px 10px rgba(31,138,98,.3);display:none}
+.opt.done .badge-done{display:block;animation:pop .5s var(--spring)}
+.opt.mid{box-shadow:none;background:rgba(255,255,255,.55);border-style:dashed;cursor:default}
+.opt .ic.r3{background:linear-gradient(135deg,#FFF6E0,#FBE7B8)}
+.r1note{text-align:center;font-size:13px;color:var(--red-d);background:var(--red-s);border-radius:12px;padding:8px 12px;margin:6px auto 4px;max-width:420px;line-height:1.4}
+.wprev{border-radius:16px;overflow:hidden;border:1px solid var(--line);margin-bottom:12px;max-height:56vh;overflow-y:auto;background:var(--mist)}
+.wprev img{display:block;width:100%;height:auto}
+.note{font-size:13px;color:var(--mute);margin-top:16px;text-align:center;line-height:1.5}
+.link{background:none;border:0;color:var(--mute);font-size:14px;cursor:pointer;padding:8px;text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- Question ---------- */
+.qhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.qno{font-size:13px;font-weight:700;color:var(--red);letter-spacing:.08em}
+.combo{font-size:12px;font-weight:700;color:#8A5A00;background:var(--gold-s);border:1px solid #F5D48A;padding:5px 10px;border-radius:99px;opacity:0;transform:scale(.6);transition:.3s var(--spring)}
+.combo.on{opacity:1;transform:scale(1)}
+.prog{display:flex;gap:6px;margin-bottom:14px}
+.prog i{flex:1;height:6px;border-radius:9px;background:#EADFD3;position:relative;overflow:hidden}
+.prog i:after{content:"";position:absolute;inset:0;background:var(--red);border-radius:9px;transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.prog i.d:after{transform:scaleX(1)}
+.prog i.c:after{background:linear-gradient(90deg,var(--red),#FF6A78)}
+
+.deck{position:relative;margin:4px 0 18px}
+.ghost{position:absolute;left:0;right:0;top:0;bottom:0;border-radius:28px;background:#fff;border:1px solid var(--line);transition:.35s}
+.ghost.g1{transform:translateY(12px) scale(.95);opacity:.75}
+.ghost.g2{transform:translateY(24px) scale(.9);opacity:.45}
+.card{position:relative;z-index:2;touch-action:pan-y;-webkit-user-select:none;user-select:none;perspective:1400px;cursor:grab}
+.card.drag{cursor:grabbing}
+.card.in{animation:cardIn .5s var(--spring)}
+@keyframes cardIn{from{transform:translateY(24px) scale(.9);opacity:.3}to{transform:none;opacity:1}}
+.flip{display:grid;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.flip.flipped{transform:rotateY(180deg)}
+.face{grid-area:1/1;background:var(--paper);border-radius:28px;box-shadow:var(--sh);padding:18px 20px 22px;
+  -webkit-backface-visibility:hidden;backface-visibility:hidden;position:relative;overflow:hidden}
+.face.back{transform:rotateY(180deg);display:flex;flex-direction:column}
+.ill{background:linear-gradient(160deg,#FFF5F1,#FBEDE2);border-radius:20px;margin-bottom:14px;position:relative;overflow:hidden}
+.ill svg{display:block;width:100%;height:auto}
+.topic{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#6A625A;background:var(--mist);padding:5px 10px;border-radius:99px;margin-bottom:10px}
+.qtext{font-size:19px;line-height:1.5;font-weight:700;letter-spacing:-.005em}
+.stamp{position:absolute;top:26px;padding:6px 14px;border:3px solid;border-radius:12px;font-size:20px;font-weight:900;letter-spacing:.04em;opacity:0;pointer-events:none;background:rgba(255,255,255,.85);z-index:3}
+.stamp.sa{left:22px;color:var(--ok);border-color:var(--ok);transform:rotate(-14deg)}
+.stamp.sb{right:22px;color:var(--red);border-color:var(--red);transform:rotate(14deg)}
+.stamp.hit{animation:stampHit .45s var(--spring) forwards}
+@keyframes stampHit{0%{opacity:0;scale:1.8}100%{opacity:1;scale:1}}
+
+.ask{font-size:14px;color:var(--mute);text-align:center;margin-bottom:12px;font-weight:700}
+.swipe-hint{display:flex;align-items:center;justify-content:center;gap:10px;font-size:12px;color:var(--mute);margin-bottom:12px}
+.swipe-hint .ar{display:inline-block;animation:nudge 1.6s ease-in-out infinite}
+.swipe-hint .ar.r{animation-name:nudgeR}
+@keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(-5px)}}
+@keyframes nudgeR{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+.ans{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ab{appearance:none;cursor:pointer;border-radius:20px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:700;font-size:15px;line-height:1.3;text-align:center;
+  transition:transform .2s var(--spring),box-shadow .2s,background .2s}
+.ab .em{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:24px;transition:transform .3s var(--spring)}
+.ab:active{transform:scale(.95)}
+.ab:hover .em{transform:scale(1.12) rotate(-6deg)}
+.ab.b{background:var(--red-s);border:1.5px solid #F6C3C8;color:var(--red-d)}
+.ab.b .em{background:#fff}
+.ab.a{background:var(--ok-s);border:1.5px solid #BFE3D1;color:#17694B}
+.ab.a .em{background:#fff}
+.ab.pick{box-shadow:0 0 0 3px currentColor}
+.ab[disabled]{opacity:.35;pointer-events:none}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:12px;min-height:36px}
+.back-btn{background:none;border:0;color:var(--mute);font-size:14px;cursor:pointer;padding:8px;display:flex;align-items:center;gap:4px}
+
+/* back face */
+.verdict{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.verdict .vi{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:28px;flex:none;animation:pop .6s .5s both var(--spring)}
+.verdict.good .vi{background:var(--ok-s)}
+.verdict.learn .vi{background:var(--gold-s)}
+.verdict b{display:block;font-size:20px}
+.verdict.good b{color:var(--ok)}
+.verdict.learn b{color:#A26A00}
+.verdict small{display:block;font-size:13px;color:var(--mute);margin-top:2px}
+.keyline{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.tag{font-size:12px;font-weight:700;padding:6px 10px;border-radius:99px;background:var(--mist);color:#5c564f}
+.tag.ka{background:var(--ok);color:#fff}
+.tag.kb{background:var(--red);color:#fff}
+.tag.chg{background:var(--gold-s);color:#8A6400}
+.why{font-size:15px;line-height:1.6;color:#3F3A35;background:#FCF8F4;border-radius:16px;padding:14px 14px 14px 16px;border-left:4px solid #F6C3C8}
+.src{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mute);margin-top:12px}
+.next{margin-top:auto;padding-top:16px}
+
+.btn{appearance:none;border:0;cursor:pointer;font-weight:700;font-size:16px;border-radius:18px;padding:16px 18px;width:100%;transition:transform .15s,box-shadow .2s}
+.btn:active{transform:scale(.98)}
+.btn.pri{background:linear-gradient(135deg,var(--red),#C3101F);color:#fff;box-shadow:0 10px 22px rgba(232,27,46,.28)}
+.btn.sec{background:var(--paper);color:var(--ink);border:1px solid var(--line)}
+
+/* ---------- Saved ---------- */
+.saved{display:flex;flex-direction:column;align-items:center;text-align:center;flex:1;justify-content:center;gap:4px}
+.seal{width:120px;height:120px;margin-bottom:8px;animation:pop .7s var(--spring)}
+@keyframes pop{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}
+.mini{width:100%;display:grid;gap:8px;margin:18px 0}
+.mini div{display:flex;gap:10px;align-items:center;background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:16px;padding:11px 12px;text-align:left;font-size:14px;
+  opacity:0;animation:enter .45s forwards}
+.mini div b{flex:none;width:28px;height:28px;border-radius:50%;background:var(--mist);display:grid;place-items:center;font-size:12px}
+.mini div span{flex:1;line-height:1.35}
+.mini div em{font-style:normal;font-size:12px;font-weight:700;flex:none;padding:5px 9px;border-radius:99px}
+.mini div em.a{background:var(--ok-s);color:var(--ok)}
+.mini div em.b{background:var(--red-s);color:var(--red-d)}
+
+/* ---------- Result ---------- */
+.res-head{text-align:center;margin-bottom:6px}
+.ring{position:relative;width:170px;height:170px;margin:12px auto 6px}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .val b{font-size:44px;color:var(--red);line-height:1}
+.ring .val small{font-size:10px;letter-spacing:.04em;text-align:center;line-height:1.3;color:var(--mute);margin-top:4px;font-weight:700}
+.msg{text-align:center;font-size:16px;line-height:1.55;color:#4E4943;margin:6px 0 16px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.stat{background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:18px;padding:14px;display:flex;gap:10px;align-items:center}
+.stat .si{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px;flex:none}
+.stat b{display:block;font-size:22px;line-height:1}
+.stat small{display:block;font-size:12px;color:var(--mute);margin-top:4px;line-height:1.3}
+.rev{display:grid;gap:10px;margin-bottom:16px}
+.ri{background:rgba(255,255,255,.95);border:1px solid var(--line);border-radius:18px;overflow:hidden;opacity:0;animation:enter .45s forwards}
+.ri summary{list-style:none;cursor:pointer;display:flex;gap:12px;align-items:center;padding:14px}
+.ri summary::-webkit-details-marker{display:none}
+.ri .st{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;flex:none;font-size:14px;font-weight:700}
+.ri .st.y{background:var(--ok-s);color:var(--ok)}
+.ri .st.n{background:var(--gold-s);color:#A26A00}
+.ri .tt{flex:1;font-size:14px;font-weight:700;line-height:1.35}
+.ri .cv{flex:none;color:var(--mute);transition:transform .3s}
+.ri[open] .cv{transform:rotate(180deg)}
+.ri .body{padding:0 14px 14px}
+.ri .body .full{font-size:14px;line-height:1.5;color:#55504A;margin-bottom:10px}
+.closing{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--red),#B30E1C);color:#fff;border-radius:22px;padding:20px 20px 20px 74px;font-size:16px;font-weight:700;line-height:1.5;margin-bottom:12px}
+.closing svg{position:absolute;left:16px;top:50%;transform:translateY(-50%)}
+.closing:after{content:"";position:absolute;right:-40px;top:-40px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.1)}
+.share{display:flex;gap:12px;align-items:center;background:rgba(255,255,255,.92);border:1px dashed #E7C9A9;border-radius:18px;padding:14px;margin-bottom:14px;font-size:14px;line-height:1.5}
+.share .si{font-size:24px;flex:none}
+
+/* ---------- Sheet, toast, confetti ---------- */
+.sheet-bg{position:fixed;inset:0;background:rgba(30,20,10,.35);z-index:50;opacity:0;pointer-events:none;transition:.3s}
+.sheet-bg.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:50%;bottom:0;width:100%;max-width:560px;transform:translate(-50%,105%);background:#fff;border-radius:26px 26px 0 0;z-index:51;
+  padding:12px 20px calc(20px + env(safe-area-inset-bottom));transition:transform .4s cubic-bezier(.2,.8,.2,1);box-shadow:0 -10px 40px rgba(0,0,0,.15)}
+.sheet{visibility:hidden}.sheet.on{transform:translate(-50%,0);visibility:visible}
+.sheet .grab{width:42px;height:5px;border-radius:9px;background:#E3DAD0;margin:0 auto 16px}
+.sheet h3{font-size:19px;margin-bottom:6px}
+.sheet p{font-size:14px;color:var(--mute);line-height:1.5;margin-bottom:16px}
+.sheet .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(30px);background:#2B2B2B;color:#fff;padding:12px 18px;border-radius:14px;font-size:14px;opacity:0;transition:.3s;pointer-events:none;max-width:90%;z-index:60}
+.toast.on{opacity:1;transform:translateX(-50%)}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:70}
+
+@media(min-width:700px){.app{padding-top:36px}h1{font-size:40px}.qtext{font-size:21px}}
+@media(max-width:360px){h1{font-size:29px}.qtext{font-size:17px}.ab{font-size:14px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true">
+  <div class="dots"></div>
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <span class="spark" style="top:12%;right:12%;font-size:18px">✦</span>
+  <span class="spark" style="top:38%;left:5%;font-size:12px;animation-delay:-1s">✦</span>
+  <span class="spark" style="bottom:18%;right:7%;font-size:14px;animation-delay:-2s">✦</span>
+</div>
+<canvas id="fx"></canvas>
+
+<div class="app">
+  <div class="top">
+    <div class="brand"><i><svg width="14" height="14" viewBox="0 0 24 24" fill="#fff"><path d="M12 2l8 3v6c0 5-3.4 9.4-8 11-4.6-1.6-8-6-8-11V5l8-3z"/></svg></i>PRU <span>KHỞI ĐẦU SỰ NGHIỆP</span></div>
+    <div class="tright">
+      <div class="pill" id="roundTag">OB6</div>
+      <button class="icon-btn" id="sndBtn" onclick="toggleSound()" aria-label="Bật/tắt âm thanh"></button>
+    </div>
+  </div>
+
+  <!-- ============ INTRO ============ -->
+  <section class="screen on" id="sIntro">
+    <svg class="hero-ill" viewBox="0 0 320 200" aria-hidden="true">
+      <ellipse cx="160" cy="182" rx="110" ry="10" fill="#EFE3D6"/>
+      <circle cx="160" cy="98" r="78" fill="#FFE4E0"/>
+      <circle cx="160" cy="98" r="78" fill="none" stroke="#F2B9BE" stroke-width="2" stroke-dasharray="4 7">
+        <animateTransform attributeName="transform" type="rotate" from="0 160 98" to="360 160 98" dur="30s" repeatCount="indefinite"/></circle>
+      <!-- shield -->
+      <g class="float">
+        <path d="M160 40l44 16v34c0 28-19 50-44 60-25-10-44-32-44-60V56z" fill="#E81B2E"/>
+        <path d="M160 52l32 12v26c0 21-14 38-32 46z" fill="#C3101F" opacity=".5"/>
+        <path d="M142 96l12 12 24-26" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+      <!-- magnifier -->
+      <g class="float d1">
+        <circle cx="236" cy="70" r="22" fill="#fff" stroke="#2B2B2B" stroke-width="5"/>
+        <circle cx="236" cy="70" r="13" fill="#FFF5D9"/>
+        <path d="M252 86l18 18" stroke="#2B2B2B" stroke-width="7" stroke-linecap="round"/>
+        <text x="236" y="77" text-anchor="middle" font-size="20" font-weight="700" fill="#E9A21B" font-family="Arial">?</text>
+      </g>
+      <!-- chat bubble -->
+      <g class="float d2">
+        <rect x="40" y="58" width="66" height="44" rx="14" fill="#fff" stroke="#ECE4DA" stroke-width="2"/>
+        <path d="M58 100l-6 14 18-12z" fill="#fff"/>
+        <circle cx="60" cy="80" r="4.5" fill="#E81B2E"/><circle cx="73" cy="80" r="4.5" fill="#F2B9BE"/><circle cx="86" cy="80" r="4.5" fill="#F2B9BE"/>
+      </g>
+      <g class="float d1"><rect x="60" y="130" width="40" height="28" rx="8" fill="#E8F6EF"/><path d="M71 144l6 6 12-12" stroke="#1F8A62" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+      <g class="float"><circle cx="252" cy="140" r="16" fill="#FFF6E0"/><text x="252" y="147" text-anchor="middle" font-size="20" font-family="Arial">💡</text></g>
+    </svg>
+    <h1>Tưởng chừng<br><em>vô hại</em></h1>
+    <p class="lead">Có những việc TVV làm mỗi ngày với mong muốn hỗ trợ khách hàng, nhưng các hành động đó có ảnh hưởng gì đến bản thân TVV và công ty không?</p>
+    <div class="choose">
+      <button class="opt" id="opt1" onclick="start(1)">
+        <span class="badge-done">✓ Đã lưu</span>
+        <div class="ic r1">🌱</div>
+        <div><b>Lần 1 · Đầu buổi</b><small id="r1hint">Chọn phương án mà bạn nghĩ là đúng với từng tình huống.</small></div>
+        <span class="go">›</span>
+      </button>
+      <div class="opt mid" aria-disabled="true">
+        <div class="ic r3">📖</div>
+        <div><b>Trong buổi học</b><small>Tìm hiểu các kiến thức liên quan.</small></div>
+      </div>
+      <button class="opt" id="opt2" onclick="start(2)">
+        <span class="badge-done">✓ Đã hoàn thành</span>
+        <div class="ic r2">✨</div>
+        <div><b>Lần 2 · Cuối buổi</b><small id="r2hint">Xem lại các tình huống và thay đổi đáp án (nếu muốn).</small></div>
+        <span class="go">›</span>
+      </button>
+    </div>
+    <p class="note">Anh chị chỉ mở Lần 2 khi giảng viên mời cả lớp cùng thực hiện.</p>
+    <div style="text-align:center"><button class="link" id="seeRes" style="display:none" onclick="showResult()">Xem lại kết quả Lần 2</button></div>
+  </section>
+
+  <!-- ============ QUESTION ============ -->
+  <section class="screen" id="sQ">
+    <div class="prog" id="prog"></div>
+    <div class="qhead"><div class="qno" id="qno"></div><div class="combo" id="combo"></div></div>
+    <div class="deck" id="deck"></div>
+    <div id="askZone">
+      <div class="ask">Theo anh chị, việc làm này có ổn không?</div>
+      <div class="r1note" id="r1note" style="display:none"></div>
+      <div class="swipe-hint"><span class="ar">←</span> Vuốt thẻ hoặc chạm nút để chọn <span class="ar r">→</span></div>
+      <div class="ans">
+        <button class="ab b" id="bB" onclick="choose('B')"><span class="em"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#B5121F" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M10 9v6M14 9v6"/></svg></span>Khoan, cần cân nhắc</button>
+        <button class="ab a" id="bA" onclick="choose('A')"><span class="em"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#17694B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg></span>Ổn, mình sẽ làm</button>
+      </div>
+    </div>
+    <div class="nav"><button class="back-btn" id="back" onclick="prev()">‹ Quay lại</button><span></span></div>
+  </section>
+
+  <!-- ============ SAVED (after round 1) ============ -->
+  <section class="screen" id="sSaved">
+    <div class="saved">
+      <svg class="seal" viewBox="0 0 120 120" aria-hidden="true">
+        <circle cx="60" cy="60" r="56" fill="#fff"/>
+        <circle cx="60" cy="60" r="56" fill="none" stroke="#F2B9BE" stroke-width="2" stroke-dasharray="3 6"/>
+        <rect x="30" y="40" width="60" height="44" rx="8" fill="#FFE4E0"/>
+        <path d="M30 46l30 22 30-22" fill="none" stroke="#E81B2E" stroke-width="4" stroke-linejoin="round"/>
+        <circle cx="86" cy="80" r="15" fill="#1F8A62"/>
+        <path d="M79 80l5 5 9-10" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h1 style="font-size:28px" id="savedTitle">Đã lưu cảm nhận<br>của anh chị</h1>
+      <p class="lead" id="savedLead">Đáp án sẽ dần được hé lộ trong buổi học hôm nay. Anh chị hãy để ý xem mình sẽ đổi ý ở tình huống nào nhé!</p>
+      <div class="mini" id="mini1"></div>
+      <button class="btn sec" onclick="go('sIntro')">Về màn hình chính</button>
+      <div style="text-align:center;margin-top:6px"><button class="link" onclick="redo1()">↺ Thực hiện lại từ đầu</button></div>
+    </div>
+  </section>
+
+  <!-- ============ RESULT (after round 2) ============ -->
+  <section class="screen" id="sRes">
+    <div class="res-head"><h1 style="font-size:28px">Nhìn lại <em>5 tình huống</em></h1></div>
+    <div class="ring">
+      <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" fill="none" stroke="#F1E6DA" stroke-width="12"/>
+        <circle id="ringBar" cx="60" cy="60" r="50" fill="none" stroke="url(#gr)" stroke-width="12" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16" style="transition:stroke-dashoffset 1.4s cubic-bezier(.2,.8,.2,1)"/>
+        <defs><linearGradient id="gr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6A78"/><stop offset="1" stop-color="#E81B2E"/></linearGradient></defs></svg>
+      <div class="val"><b id="ringNum">0/5</b><small>LỰA CHỌN<br>PHÙ HỢP</small></div>
+    </div>
+    <p class="msg" id="msg"></p>
+    <div class="stats" id="stats"></div>
+    <div class="rev" id="rev"></div>
+    <div class="closing">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="#fff"><path d="M12 2l8 3v6c0 5-3.4 9.4-8 11-4.6-1.6-8-6-8-11V5l8-3z" opacity=".9"/><path d="M8.5 12l2.5 2.5 4.5-5" stroke="#E81B2E" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Hiểu đúng quy định là nền tảng để anh chị yên tâm đồng hành và phục vụ khách hàng lâu dài.
+    </div>
+    <div class="share"><span class="si">💬</span><div>Anh chị hãy chia sẻ trong khung chat Zoom: <b>Mình đã đổi ý ở tình huống nào, và vì sao?</b></div></div>
+    <button class="btn pri" onclick="openWrap()" style="margin-bottom:10px">📸 Tải ảnh wrap-up</button>
+    <button class="btn sec" onclick="go('sIntro')">Về màn hình chính</button>
+    <div style="text-align:center;margin-top:6px"><button class="link" onclick="openSheet()">Xóa kết quả và làm lại từ đầu</button></div>
+  </section>
+</div>
+
+<div class="sheet-bg" id="sheetBg" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true">
+  <div class="grab"></div>
+  <h3>Làm lại từ đầu?</h3>
+  <p>Kết quả Lần 1 và Lần 2 đã lưu trên thiết bị này sẽ được xóa để anh chị bắt đầu lại.</p>
+  <div class="row"><button class="btn sec" onclick="closeSheet()">Giữ kết quả</button><button class="btn pri" onclick="resetAll()">Làm lại</button></div>
+</div>
+<div class="sheet-bg" id="wrapBg" onclick="closeWrap()"></div>
+<div class="sheet" id="wrapSheet" role="dialog" aria-modal="true">
+  <div class="grab"></div>
+  <h3>📸 Ảnh wrap-up của bạn</h3>
+  <div class="wprev" id="wprev"></div>
+  <p style="margin-bottom:12px">Trên điện thoại, bạn cũng có thể nhấn giữ vào ảnh để lưu.</p>
+  <div class="row"><button class="btn sec" onclick="closeWrap()">Đóng</button><button class="btn pri" onclick="dlWrap()">⬇ Tải ảnh về máy</button></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= DATA ================= */
+const ICON_SOCIAL='📱',ICON_PROC='📝',ICON_TAX='🧾';
+const Q=[
+ {short:"Đăng ảnh hợp đồng để cảm ơn khách hàng",
+  t:"Mình chụp ảnh hợp đồng của khách hàng và đăng lên Facebook để cảm ơn khách hàng đã tin tưởng.",k:"B",
+  w:"Thông tin cá nhân và hợp đồng của khách hàng là thông tin cần được bảo mật, vì vậy anh chị không đăng tải lên mạng xã hội, kể cả với mục đích cảm ơn.",
+  s:"01 · Quy tắc ứng xử trên mạng xã hội",topic:[ICON_SOCIAL,"Mạng xã hội"],ill:"post"},
+ {short:"Điền sẵn hồ sơ, khách hàng ký sau",
+  t:"Khách hàng quá bận nên mình điền sẵn Hồ sơ yêu cầu bảo hiểm, sau đó gửi để khách hàng ký sau.",k:"B",
+  w:"Hồ sơ yêu cầu bảo hiểm cần được điền với sự chứng kiến của khách hàng, đồng thời khách hàng cần được kiểm tra lại thông tin trước khi nộp hồ sơ.",
+  s:"02 · Chính sách tuân thủ",topic:[ICON_PROC,"Quy trình tư vấn"],ill:"form"},
+ {short:"Chia sẻ bài phàn nàn kèm bình luận so sánh",
+  t:"Thấy một bài viết phàn nàn về công ty bảo hiểm khác, mình chia sẻ lại kèm bình luận so sánh với Prudential.",k:"B",
+  w:"Anh chị không chia sẻ quan điểm mang tính đả kích về khiếu nại của khách hàng (kể cả khách hàng của công ty khác), và không tham chiếu hay so sánh với các công ty bảo hiểm khác trên mạng xã hội.",
+  s:"01 · Quy tắc ứng xử trên mạng xã hội",topic:[ICON_SOCIAL,"Mạng xã hội"],ill:"share"},
+ {short:"Phản hồi khiếu nại trên mạng xã hội",
+  t:"Khách hàng nêu khiếu nại trên mạng xã hội. Mình trả lời ngắn gọn, mời khách hàng trao đổi trực tiếp và báo cho nhân viên phụ trách của công ty.",k:"A",
+  w:"Đây là cách ứng xử được khuyến khích: chân thành, đúng trọng tâm và đưa khách hàng đến đúng kênh hỗ trợ.",
+  s:"01 · Quy tắc ứng xử trên mạng xã hội",topic:[ICON_SOCIAL,"Mạng xã hội"],ill:"support"},
+ {short:"Điền giúp tờ khai thuế Hoa Kỳ",
+  t:"Khách hàng có quốc tịch Hoa Kỳ nhờ mình điền giúp tờ khai thuế Hoa Kỳ cho nhanh.",k:"B",
+  w:"Việc điền tờ khai thuế Hoa Kỳ liên quan đến tư vấn thuế, trong khi nhân viên và tư vấn viên Prudential không được cấp phép. Anh chị hãy khuyến nghị khách hàng tìm đến nơi được cấp phép hoạt động tư vấn thuế (nếu cần).",
+  s:"03 · Đạo luật FATCA",topic:[ICON_TAX,"FATCA"],ill:"tax"}
+];
+const L={A:"Ổn, mình sẽ làm",B:"Khoan, cần cân nhắc"};
+
+/* ================= ILLUSTRATIONS ================= */
+const ILL={
+post:`<svg viewBox="0 0 300 150"><circle cx="150" cy="78" r="58" fill="#FFE1DC"/>
+ <g class="float"><rect x="112" y="14" width="76" height="128" rx="14" fill="#2B2B2B"/><rect x="118" y="24" width="64" height="108" rx="8" fill="#fff"/>
+ <circle cx="128" cy="35" r="5" fill="#F6C3C8"/><rect x="137" y="32" width="30" height="5" rx="2.5" fill="#E3DAD0"/>
+ <rect x="123" y="45" width="54" height="46" rx="5" fill="#FBE3E5"/><rect x="134" y="50" width="32" height="37" rx="3" fill="#fff"/>
+ <rect x="139" y="56" width="22" height="3" rx="1.5" fill="#E3DAD0"/><rect x="139" y="63" width="18" height="3" rx="1.5" fill="#E3DAD0"/><rect x="139" y="70" width="20" height="3" rx="1.5" fill="#E3DAD0"/>
+ <circle cx="157" cy="80" r="4" fill="#E81B2E"/>
+ <path d="M129 103c-2-3 2-6 4-3 2-3 6 0 4 3l-4 4z" fill="#E81B2E"/><rect x="142" y="101" width="28" height="4" rx="2" fill="#E3DAD0"/><rect x="125" y="113" width="44" height="4" rx="2" fill="#EFE7DE"/></g>
+ <g class="float d1"><path d="M66 46c-4-6 4-12 8-6 4-6 12 0 8 6l-8 8z" fill="#FF8A95"/></g>
+ <g class="float d2"><path d="M220 34c-3-5 3-9 6-5 3-4 9 0 6 5l-6 6z" fill="#E81B2E"/></g>
+ <g class="float"><rect x="206" y="84" width="44" height="26" rx="13" fill="#fff" stroke="#ECE4DA" stroke-width="2"/><text x="228" y="102" text-anchor="middle" font-size="14" font-family="Arial">👍</text></g>
+ <g class="float d1"><rect x="48" y="94" width="48" height="26" rx="13" fill="#fff" stroke="#ECE4DA" stroke-width="2"/><text x="72" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="#E81B2E" font-family="Arial">+99</text></g></svg>`,
+form:`<svg viewBox="0 0 300 150"><circle cx="150" cy="78" r="58" fill="#FFE1DC"/>
+ <g class="float"><rect x="104" y="16" width="86" height="118" rx="10" fill="#fff" stroke="#ECE4DA" stroke-width="2"/>
+ <rect x="104" y="16" width="86" height="20" rx="10" fill="#E81B2E"/><rect x="104" y="28" width="86" height="8" fill="#E81B2E"/>
+ <rect x="116" y="46" width="10" height="10" rx="2" fill="#E8F6EF" stroke="#1F8A62"/><path d="M118 51l2 2 4-4" stroke="#1F8A62" stroke-width="1.8" fill="none"/><rect x="132" y="48" width="44" height="5" rx="2.5" fill="#E3DAD0"/>
+ <rect x="116" y="62" width="10" height="10" rx="2" fill="#E8F6EF" stroke="#1F8A62"/><path d="M118 67l2 2 4-4" stroke="#1F8A62" stroke-width="1.8" fill="none"/><rect x="132" y="64" width="36" height="5" rx="2.5" fill="#E3DAD0"/>
+ <rect x="116" y="78" width="10" height="10" rx="2" fill="#E8F6EF" stroke="#1F8A62"/><path d="M118 83l2 2 4-4" stroke="#1F8A62" stroke-width="1.8" fill="none"/><rect x="132" y="80" width="40" height="5" rx="2.5" fill="#E3DAD0"/>
+ <rect x="116" y="100" width="62" height="24" rx="6" fill="#FFF6E0" stroke="#E9A21B" stroke-dasharray="4 3"/><text x="147" y="116" text-anchor="middle" font-size="10" font-weight="700" fill="#A26A00" font-family="Arial">KÝ TÊN</text></g>
+ <g class="float d1"><rect x="196" y="40" width="10" height="64" rx="3" fill="#2B2B2B" transform="rotate(35 201 72)"/><path d="M181 96l6 8 4-6z" fill="#E9A21B"/></g>
+ <g class="float d2"><circle cx="70" cy="56" r="24" fill="#fff" stroke="#2B2B2B" stroke-width="4"/><path d="M70 42v14l9 6" stroke="#E81B2E" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+ <g class="float"><circle cx="66" cy="112" r="12" fill="#FFF6E0"/><text x="66" y="117" text-anchor="middle" font-size="13" font-family="Arial">⚡</text></g></svg>`,
+share:`<svg viewBox="0 0 300 150"><circle cx="150" cy="78" r="58" fill="#FFE1DC"/>
+ <g class="float"><rect x="30" y="34" width="96" height="74" rx="14" fill="#fff" stroke="#ECE4DA" stroke-width="2"/>
+ <circle cx="48" cy="52" r="8" fill="#D9D2C8"/><rect x="62" y="48" width="44" height="5" rx="2.5" fill="#E3DAD0"/>
+ <circle cx="78" cy="82" r="14" fill="#FFF6E0"/><circle cx="73" cy="79" r="2" fill="#2B2B2B"/><circle cx="83" cy="79" r="2" fill="#2B2B2B"/><path d="M72 90q6-5 12 0" stroke="#2B2B2B" stroke-width="2" fill="none" stroke-linecap="round"/></g>
+ <path d="M128 70c22-28 44-28 56-8" stroke="#E81B2E" stroke-width="4" fill="none" stroke-dasharray="6 6" stroke-linecap="round"><animate attributeName="stroke-dashoffset" from="24" to="0" dur="1s" repeatCount="indefinite"/></path>
+ <path d="M178 52l8 12-14 2z" fill="#E81B2E"/>
+ <g class="float d1"><rect x="176" y="62" width="98" height="64" rx="14" fill="#fff" stroke="#ECE4DA" stroke-width="2"/>
+ <rect x="190" y="76" width="66" height="5" rx="2.5" fill="#E3DAD0"/><rect x="190" y="88" width="52" height="5" rx="2.5" fill="#E3DAD0"/><rect x="190" y="100" width="60" height="5" rx="2.5" fill="#E3DAD0"/></g>
+ <g class="float d2"><circle cx="150" cy="118" r="18" fill="#E81B2E"/><text x="150" y="124" text-anchor="middle" font-size="14" font-weight="900" fill="#fff" font-family="Arial">VS</text></g></svg>`,
+support:`<svg viewBox="0 0 300 150"><circle cx="150" cy="78" r="58" fill="#E3F3EA"/>
+ <g class="float"><rect x="28" y="24" width="120" height="40" rx="16" fill="#fff" stroke="#ECE4DA" stroke-width="2"/><path d="M44 62l-6 12 16-10z" fill="#fff"/>
+ <circle cx="48" cy="44" r="9" fill="#FFF6E0"/><text x="48" y="49" text-anchor="middle" font-size="13" font-weight="700" fill="#A26A00" font-family="Arial">!</text>
+ <rect x="64" y="38" width="66" height="5" rx="2.5" fill="#E3DAD0"/><rect x="64" y="48" width="44" height="5" rx="2.5" fill="#E3DAD0"/></g>
+ <g class="float d1"><rect x="132" y="72" width="128" height="44" rx="16" fill="#E81B2E"/><path d="M244 114l8 12-18-10z" fill="#E81B2E"/>
+ <rect x="146" y="84" width="74" height="5" rx="2.5" fill="#fff" opacity=".9"/><rect x="146" y="96" width="54" height="5" rx="2.5" fill="#fff" opacity=".7"/>
+ <path d="M236 88c-3-5 3-9 6-5 3-4 9 0 6 5l-6 6z" fill="#fff"/></g>
+ <g class="float d2"><circle cx="248" cy="40" r="22" fill="#fff" stroke="#ECE4DA" stroke-width="2"/>
+ <path d="M236 44v-4a12 12 0 0124 0v4" stroke="#2B2B2B" stroke-width="3.5" fill="none"/><rect x="232" y="42" width="7" height="11" rx="3" fill="#2B2B2B"/><rect x="257" y="42" width="7" height="11" rx="3" fill="#2B2B2B"/>
+ <circle cx="264" cy="24" r="8" fill="#1F8A62"/><path d="M260 24l3 3 5-6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></g>
+ <g class="float"><circle cx="70" cy="112" r="16" fill="#fff" stroke="#ECE4DA" stroke-width="2"/><text x="70" y="118" text-anchor="middle" font-size="15" font-family="Arial">🤝</text></g></svg>`,
+tax:`<svg viewBox="0 0 300 150"><circle cx="150" cy="78" r="58" fill="#FFE1DC"/>
+ <g class="float"><rect x="100" y="18" width="92" height="116" rx="10" fill="#fff" stroke="#ECE4DA" stroke-width="2"/>
+ <rect x="110" y="28" width="34" height="22" rx="3" fill="#1E3A8A"/>
+ <circle cx="116" cy="34" r="1.6" fill="#fff"/><circle cx="123" cy="34" r="1.6" fill="#fff"/><circle cx="130" cy="34" r="1.6" fill="#fff"/><circle cx="137" cy="34" r="1.6" fill="#fff"/><circle cx="119" cy="41" r="1.6" fill="#fff"/><circle cx="126" cy="41" r="1.6" fill="#fff"/><circle cx="133" cy="41" r="1.6" fill="#fff"/>
+ <rect x="144" y="28" width="38" height="4" fill="#E81B2E"/><rect x="144" y="35" width="38" height="4" fill="#E81B2E"/><rect x="144" y="42" width="38" height="4" fill="#E81B2E"/>
+ <text x="146" y="70" text-anchor="middle" font-size="15" font-weight="900" fill="#2B2B2B" font-family="Arial" letter-spacing="2">TAX</text>
+ <rect x="112" y="80" width="68" height="5" rx="2.5" fill="#E3DAD0"/><rect x="112" y="92" width="56" height="5" rx="2.5" fill="#E3DAD0"/><rect x="112" y="104" width="62" height="5" rx="2.5" fill="#E3DAD0"/><rect x="112" y="116" width="40" height="5" rx="2.5" fill="#E3DAD0"/></g>
+ <g class="float d1"><rect x="206" y="58" width="50" height="66" rx="10" fill="#2B2B2B"/><rect x="213" y="65" width="36" height="14" rx="3" fill="#E8F6EF"/>
+ <g fill="#fff" opacity=".85"><rect x="213" y="85" width="9" height="9" rx="2"/><rect x="226" y="85" width="9" height="9" rx="2"/><rect x="239" y="85" width="9" height="9" rx="2" fill="#E81B2E"/><rect x="213" y="98" width="9" height="9" rx="2"/><rect x="226" y="98" width="9" height="9" rx="2"/><rect x="239" y="98" width="9" height="9" rx="2"/><rect x="213" y="111" width="9" height="9" rx="2"/><rect x="226" y="111" width="22" height="9" rx="2"/></g></g>
+ <g class="float d2"><circle cx="62" cy="54" r="20" fill="#E9A21B"/><circle cx="62" cy="54" r="15" fill="#F5C04F"/><text x="62" y="61" text-anchor="middle" font-size="18" font-weight="900" fill="#8A5A00" font-family="Arial">$</text></g>
+ <g class="float"><circle cx="70" cy="110" r="14" fill="#fff" stroke="#ECE4DA" stroke-width="2"/><text x="70" y="116" text-anchor="middle" font-size="15" font-weight="900" fill="#E81B2E" font-family="Arial">?</text></g></svg>`
+};
+
+/* ================= SOUND ================= */
+let ac=null,soundOn=true;
+try{soundOn=localStorage.getItem('ob6_snd')!=='0'}catch(e){}
+function actx(){if(!ac){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;ac=new C()}if(ac.state==='suspended')ac.resume();return ac}
+function tone(f,d,type='sine',v=.12,delay=0,f2){if(!soundOn)return;const c=actx();if(!c)return;const t=c.currentTime+delay,o=c.createOscillator(),g=c.createGain();
+  o.type=type;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+d);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g).connect(c.destination);o.start(t);o.stop(t+d+.05)}
+function noise(d=.25,v=.08,from=1800,to=400){if(!soundOn)return;const c=actx();if(!c)return;const n=c.sampleRate*d,b=c.createBuffer(1,n,c.sampleRate),a=b.getChannelData(0);
+  for(let k=0;k<n;k++)a[k]=(Math.random()*2-1)*(1-k/n);const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=b;f.type='bandpass';
+  f.frequency.setValueAtTime(from,c.currentTime);f.frequency.exponentialRampToValueAtTime(to,c.currentTime+d);g.gain.value=v;s.connect(f).connect(g).connect(c.destination);s.start()}
+const SFX={
+  tap:()=>tone(720,.07,'triangle',.07),
+  whoosh:()=>noise(.28,.12,2400,300),
+  stamp:()=>{tone(150,.14,'square',.06);noise(.08,.1,900,200)},
+  flip:()=>tone(380,.16,'sine',.08,0,820),
+  good:()=>{tone(784,.14,'sine',.12);tone(1175,.28,'sine',.11,.1)},
+  learn:()=>{tone(523,.16,'triangle',.09);tone(659,.24,'triangle',.08,.12)},
+  win:()=>[523,659,784,1047].forEach((f,k)=>tone(f,.25,'triangle',.09,k*.1)),
+  saved:()=>{tone(660,.1,'sine',.09);tone(990,.22,'sine',.08,.08)}
+};
+function haptic(ms=12){try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}}
+function sndIcon(){$('sndBtn').innerHTML=soundOn
+ ?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2B2B2B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4z" fill="#2B2B2B"/><path d="M15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg>'
+ :'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7A7570" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4z" fill="#7A7570"/><path d="M22 9l-6 6M16 9l6 6"/></svg>'}
+function toggleSound(){soundOn=!soundOn;try{localStorage.setItem('ob6_snd',soundOn?'1':'0')}catch(e){}sndIcon();if(soundOn)SFX.tap();toast(soundOn?'Đã bật âm thanh':'Đã tắt âm thanh')}
+
+/* ================= STATE ================= */
+const KEY="ob6_tcvh";
+let round=1,i=0,cur=[],phase='ask',streak=0,busy=false;
+const $=id=>document.getElementById(id);
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function save(o){try{localStorage.setItem(KEY,JSON.stringify(o))}catch(e){}}
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));$(id).classList.add('on');window.scrollTo(0,0);
+  $('roundTag').textContent=(id==='sIntro')?'OB6':(round===1?'Lần 1':'Lần 2');if(id==='sIntro')hint()}
+function hint(){const d=load();$('r1hint').textContent=d.r1?'Đã lưu · Chạm để xem lại lựa chọn của bạn':'Chọn phương án mà bạn nghĩ là đúng với từng tình huống.';$('opt1').classList.toggle('done',!!d.r1);$('opt2').classList.toggle('done',!!d.r2);
+  $('r2hint').textContent='Xem lại các tình huống và thay đổi đáp án (nếu muốn).';
+  $('seeRes').style.display=d.r2?'inline-block':'none'}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),2000)}
+
+/* ================= FLOW ================= */
+function renderMini(a){$('mini1').innerHTML=Q.map((q,k)=>`<div style="animation-delay:${.15+k*.08}s"><b>${k+1}</b><span>${q.short}</span><em class="${a[k]==='A'?'a':'b'}">${a[k]==='A'?'👍 Ổn':'✋ Khoan'}</em></div>`).join('')}
+function showSaved(fresh){const d=load();if(!d.r1)return;round=1;renderMini(d.r1);
+  $('savedTitle').innerHTML=fresh?'Đã lưu cảm nhận<br>của anh chị':'Cảm nhận Lần 1<br>của anh chị';
+  $('savedLead').textContent=fresh?'Đáp án sẽ dần được hé lộ trong buổi học hôm nay. Anh chị hãy để ý xem mình sẽ đổi ý ở tình huống nào nhé!':'Anh chị hãy đối chiếu lựa chọn đầu buổi với nội dung vừa học, trước khi thực hiện Lần 2 nhé!';
+  go('sSaved')}
+function redo1(){SFX.tap();haptic();actx();round=1;i=0;streak=0;cur=new Array(Q.length).fill(null);go('sQ');render()}
+function start(r){if(r===1&&load().r1){SFX.tap();showSaved(false);return}
+  SFX.tap();haptic();actx();round=r;i=0;streak=0;cur=new Array(Q.length).fill(null);go('sQ');render()}
+function render(){
+  phase='ask';busy=false;
+  $('prog').innerHTML=Q.map((_,k)=>`<i class="${k<i?'d':''} ${k===i?'c':''}"></i>`).join('');
+  requestAnimationFrame(()=>{const cs=$('prog').children;if(cs[i])cs[i].classList.add('d')});
+  $('qno').textContent=`TÌNH HUỐNG ${i+1}/${Q.length}`;
+  const q=Q[i],left=Q.length-i-1;
+  $('deck').innerHTML=(left>=2?'<div class="ghost g2"></div>':'')+(left>=1?'<div class="ghost g1"></div>':'')+
+   `<div class="card in" id="card"><div class="flip" id="flip">
+     <div class="face front">
+       <div class="stamp sa" id="stA">ỔN</div><div class="stamp sb" id="stB">KHOAN ĐÃ</div>
+       <div class="ill">${ILL[q.ill]}</div>
+       <div class="topic">${q.topic[0]} ${q.topic[1]}</div>
+       <p class="qtext">${q.t}</p>
+     </div>
+     <div class="face back" id="backFace"></div>
+   </div></div>`;
+  $('askZone').style.display='block';
+  const r1p=round===2?(load().r1||[])[i]:null;['A','B'].forEach(x=>{$('b'+x).disabled=false;$('b'+x).classList.toggle('pick',round===1?cur[i]===x:r1p===x)});
+  $('r1note').textContent=r1p?`Lần 1 bạn đã chọn: ${L[r1p]}. Giữ nguyên hoặc thay đổi đáp án (nếu muốn).`:'';$('r1note').style.display=r1p?'block':'none';
+  $('back').style.visibility=(round===1&&i>0)?'visible':'hidden';
+  bindDrag($('card'));
+}
+function choose(v){
+  if(busy||phase!=='ask')return;busy=true;cur[i]=v;haptic(15);
+  ['A','B'].forEach(x=>$('b'+x).disabled=true);
+  const st=$(v==='A'?'stA':'stB');st.classList.add('hit');SFX.stamp();
+  if(round===1){
+    setTimeout(()=>fly(v==='A'?1:-1,()=>{if(i<Q.length-1){i++;render()}else finish()}),380);
+  }else{
+    setTimeout(()=>reveal(v),450);
+  }
+}
+function fly(dir,cb){const c=$('card');SFX.whoosh();c.style.transition='transform .42s cubic-bezier(.4,0,.2,1),opacity .42s';
+  c.style.transform=`translateX(${dir*130}%) rotate(${dir*20}deg)`;c.style.opacity='0';setTimeout(cb,360)}
+function prev(){if(round===1&&i>0&&!busy){SFX.tap();i--;render()}}
+
+/* Round 2: per-card reveal */
+function reveal(v){
+  phase='reveal';const q=Q[i],r1=load().r1,a1=r1?r1[i]:null,ok=v===q.k,chg=a1&&a1!==v;
+  streak=ok?streak+1:0;
+  $('backFace').innerHTML=`
+    <div class="verdict ${ok?'good':'learn'}"><div class="vi">${ok?'<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1F8A62" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>':'<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#A26A00" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 00-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0012 3z"/></svg>'}</div>
+      <div><b>${ok?'Chính xác!':'Cùng nhìn lại nhé!'}</b><small>${ok?'Anh chị đã chọn cách ứng xử phù hợp.':'Đây là một lưu ý quan trọng anh chị cần ghi nhớ.'}</small></div></div>
+    <div class="keyline">
+      <span class="tag ${q.k==='A'?'ka':'kb'}">Đáp án: ${L[q.k]}</span>
+      ${a1?`<span class="tag">Đầu buổi: ${L[a1]}</span>`:''}
+      <span class="tag">Cuối buổi: ${L[v]}</span>
+      ${chg?'<span class="tag chg">↺ Đã đổi ý</span>':''}
+    </div>
+    <div class="why">${q.w}</div>
+    <div class="src">📘 ${q.s}</div>
+    <div class="next"><button class="btn pri" id="nextBtn" onclick="nextQ()">${i<Q.length-1?'Tình huống tiếp theo →':'Xem tổng kết ✨'}</button></div>`;
+  $('askZone').style.display='none';
+  $('flip').classList.add('flipped');SFX.flip();
+  setTimeout(()=>{ok?SFX.good():SFX.learn();haptic(ok?[10,40,10]:20);if(ok&&streak>=1)burst(ok?18:0)},420);
+  const cb=$('combo');if(streak>=2){cb.textContent=`🔥 ${streak} câu liên tiếp`;cb.classList.add('on')}else cb.classList.remove('on');
+}
+function nextQ(){if(busy&&phase!=='reveal')return;SFX.tap();phase='done';
+  fly(1,()=>{if(i<Q.length-1){i++;render()}else finish()})}
+
+function finish(){
+  const d=load();
+  if(round===1){
+    d.r1=cur.slice();delete d.r2;save(d);SFX.saved();haptic([10,30,10]);
+    showSaved(true);
+  }else{d.r2=cur.slice();save(d);showResult()}
+}
+function showResult(){
+  const d=load();if(!d.r2)return;round=2;const r1=d.r1,r2=d.r2;let right=0,changed=0;
+  $('rev').innerHTML=Q.map((q,k)=>{const ok=r2[k]===q.k;if(ok)right++;const chg=r1&&r1[k]!==r2[k];if(chg)changed++;
+    return `<details class="ri" style="animation-delay:${.3+k*.08}s"><summary><span class="st ${ok?'y':'n'}">${ok?'✓':'!'}</span><span class="tt">${k+1}. ${q.short}</span><span class="cv">⌄</span></summary>
+      <div class="body"><p class="full">${q.t}</p><div class="keyline"><span class="tag ${q.k==='A'?'ka':'kb'}">Đáp án: ${L[q.k]}</span>${r1?`<span class="tag">Đầu buổi: ${L[r1[k]]}</span>`:''}<span class="tag">Cuối buổi: ${L[r2[k]]}</span>${chg?'<span class="tag chg">↺ Đã đổi ý</span>':''}</div>
+      <div class="why">${q.w}</div><div class="src">📘 ${q.s}</div></div></details>`}).join('');
+  $('msg').innerHTML=right===Q.length?'<b>Xuất sắc!</b> Anh chị đã chọn cách ứng xử phù hợp ở cả 5 tình huống.'
+    :right>=3?'<b>Rất tốt!</b> Anh chị đã nắm được phần lớn những lưu ý quan trọng.'
+    :'<b>Mỗi tình huống là một bài học quý.</b> Anh chị hãy mở từng mục bên dưới để xem lại phần giải thích nhé!';
+  $('stats').innerHTML=r1
+    ?`<div class="stat"><div class="si" style="background:var(--gold-s)">↺</div><div><b>${changed}</b><small>tình huống đã đổi ý sau buổi học</small></div></div>
+      <div class="stat"><div class="si" style="background:var(--ok-s)">📌</div><div><b>${Q.length-changed}</b><small>tình huống giữ nguyên lựa chọn</small></div></div>`
+    :`<div class="stat" style="grid-column:1/-1"><div class="si" style="background:var(--mist)">ℹ️</div><div><small style="font-size:13px">Thiết bị này chưa lưu kết quả Lần 1, nên chưa thể so sánh sự thay đổi trước và sau buổi học.</small></div></div>`;
+  go('sRes');
+  const bar=$('ringBar');bar.style.transition='none';bar.style.strokeDashoffset=314.16;bar.getBoundingClientRect();
+  bar.style.transition='stroke-dashoffset 1.4s cubic-bezier(.2,.8,.2,1)';
+  setTimeout(()=>{bar.style.strokeDashoffset=314.16*(1-right/Q.length)},150);
+  let n=0;const tick=setInterval(()=>{$('ringNum').textContent=`${n}/${Q.length}`;if(n>=right)clearInterval(tick);n++},1200/(right+1));
+  setTimeout(()=>{SFX.win();if(right>=3)confetti()},700);
+}
+
+/* ================= DRAG / SWIPE ================= */
+function bindDrag(card){
+  let sx=0,sy=0,dx=0,active=false,locked=null;
+  const stA=()=>$('stA'),stB=()=>$('stB');
+  card.addEventListener('pointerdown',e=>{if(phase!=='ask'||busy)return;active=true;locked=null;sx=e.clientX;sy=e.clientY;dx=0;card.classList.remove('in');card.style.transition='none'});
+  card.addEventListener('pointermove',e=>{if(!active)return;const mx=e.clientX-sx,my=e.clientY-sy;
+    if(locked===null&&(Math.abs(mx)>8||Math.abs(my)>8)){locked=Math.abs(mx)>Math.abs(my)?'x':'y';if(locked==='x'){try{card.setPointerCapture(e.pointerId)}catch(_){}card.classList.add('drag')}}
+    if(locked!=='x')return;dx=mx;card.style.transform=`translateX(${dx}px) rotate(${dx/18}deg)`;
+    const p=Math.min(Math.abs(dx)/110,1);stA().style.opacity=dx>0?p:0;stB().style.opacity=dx<0?p:0});
+  const end=()=>{if(!active)return;active=false;card.classList.remove('drag');
+    if(locked==='x'&&Math.abs(dx)>100){const v=dx>0?'A':'B';
+      if(round===1){busy=true;cur[i]=v;haptic(15);SFX.stamp();['A','B'].forEach(x=>$('b'+x).disabled=true);
+        fly(dx>0?1:-1,()=>{if(i<Q.length-1){i++;render()}else finish()})}
+      else{card.style.transition='transform .45s cubic-bezier(.34,1.56,.64,1)';card.style.transform='';choose(v)}
+    }else{card.style.transition='transform .45s cubic-bezier(.34,1.56,.64,1)';card.style.transform='';stA().style.opacity=0;stB().style.opacity=0}};
+  card.addEventListener('pointerup',end);card.addEventListener('pointercancel',end);
+}
+document.addEventListener('keydown',e=>{if(!$('sQ').classList.contains('on'))return;
+  if(phase==='ask'){if(e.key==='ArrowRight')choose('A');if(e.key==='ArrowLeft')choose('B')}
+  else if(phase==='reveal'&&(e.key==='Enter'||e.key===' '||e.key==='ArrowRight')){e.preventDefault();nextQ()}});
+
+/* ================= FX: confetti & burst ================= */
+const cv=$('fx'),cx=cv.getContext('2d');let parts=[],raf=null;
+function size(){cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio;cx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}
+addEventListener('resize',size);size();
+const COLS=['#E81B2E','#FF6A78','#F5C04F','#1F8A62','#FBD3D7','#ffffff'];
+function spawn(n,x,y,spread,up){for(let k=0;k<n;k++)parts.push({x,y,vx:(Math.random()-.5)*spread,vy:-Math.random()*up-2,g:.25,s:4+Math.random()*6,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:COLS[k%COLS.length],l:90+Math.random()*40,sh:Math.random()>.5})}
+function loop(){cx.clearRect(0,0,innerWidth,innerHeight);parts=parts.filter(p=>p.l>0);
+  parts.forEach(p=>{p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.l--;cx.save();cx.globalAlpha=Math.min(1,p.l/40);cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;
+    if(p.sh)cx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);else{cx.beginPath();cx.arc(0,0,p.s/2.4,0,7);cx.fill()}cx.restore()});
+  if(parts.length)raf=requestAnimationFrame(loop);else raf=null}
+function run(){if(!raf)raf=requestAnimationFrame(loop)}
+function confetti(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;spawn(90,innerWidth*.25,innerHeight*.35,14,12);spawn(90,innerWidth*.75,innerHeight*.35,14,12);run()}
+function burst(n){if(!n||matchMedia('(prefers-reduced-motion: reduce)').matches)return;const c=$('card');if(!c)return;const b=c.getBoundingClientRect();spawn(n,b.left+b.width/2,b.top+40,9,8);run()}
+
+/* ================= SHEET / RESET ================= */
+function openSheet(){SFX.tap();$('sheetBg').classList.add('on');$('sheet').classList.add('on')}
+function closeSheet(){$('sheetBg').classList.remove('on');$('sheet').classList.remove('on')}
+function resetAll(){try{localStorage.removeItem(KEY)}catch(e){}closeSheet();round=1;go('sIntro');toast('Đã làm mới, anh chị có thể bắt đầu lại');SFX.saved()}
+
+sndIcon();hint();
+
+/* ================= WRAP-UP IMAGE ================= */
+let wrapURL='';
+function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
+function wrapT(c,t,maxW){const w=t.split(' '),out=[];let l='';w.forEach(x=>{const tt=l?l+' '+x:x;if(c.measureText(tt).width>maxW&&l){out.push(l);l=x}else l=tt});if(l)out.push(l);return out}
+function pill(c,x,y,txt,bg,fg){c.font='bold 24px Arial';const w=c.measureText(txt).width+32;rr(c,x,y,w,42,21);c.fillStyle=bg;c.fill();c.fillStyle=fg;c.textBaseline='middle';c.fillText(txt,x+16,y+22);c.textBaseline='alphabetic';return w}
+function buildWrap(){
+  const d=load();if(!d.r2)return'';const r1=d.r1,r2=d.r2;let right=0,changed=0;
+  Q.forEach((q,k)=>{if(r2[k]===q.k)right++;if(r1&&r1[k]!==r2[k])changed++});
+  const W=1080,P=64,cv=document.createElement('canvas'),c=cv.getContext('2d');
+  // measure height
+  c.font='bold 30px Arial';const lines=Q.map(q=>wrapT(c,q.short,W-2*P-150));
+  const itemH=lines.map(l=>40+l.length*38+58);
+  const H=582+itemH.reduce((a,b)=>a+b+18,0)+250;
+  cv.width=W;cv.height=H;
+  const g=c.createLinearGradient(0,0,W,H);g.addColorStop(0,'#FFF5F2');g.addColorStop(1,'#FBF7F2');c.fillStyle=g;c.fillRect(0,0,W,H);
+  c.fillStyle='rgba(232,27,46,.08)';c.beginPath();c.arc(W-80,120,220,0,7);c.fill();c.beginPath();c.arc(60,H-120,180,0,7);c.fill();
+  // header
+  c.fillStyle='#E81B2E';c.font='bold 26px Arial';c.fillText('PRU',P,P+26);const pw=c.measureText('PRU ').width;
+  c.fillStyle='#232323';c.fillText('KHỞI ĐẦU SỰ NGHIỆP · OB6',P+pw,P+26);
+  c.fillStyle='#232323';c.font='bold 64px Arial';c.fillText('Tưởng chừng',P,P+120);
+  c.fillStyle='#E81B2E';c.fillText('vô hại',P,P+196);
+  // score ring
+  const cx=W-P-110,cy=P+150,R=95;c.lineWidth=24;c.lineCap='round';
+  c.strokeStyle='#F1E6DA';c.beginPath();c.arc(cx,cy,R,0,Math.PI*2);c.stroke();
+  c.strokeStyle='#E81B2E';c.beginPath();c.arc(cx,cy,R,-Math.PI/2,-Math.PI/2+Math.PI*2*right/Q.length);c.stroke();
+  c.textAlign='center';c.fillStyle='#232323';c.font='bold 54px Arial';c.fillText(`${right}/${Q.length}`,cx,cy+12);
+  c.font='bold 16px Arial';c.fillStyle='#7A7570';c.fillText('LỰA CHỌN',cx,cy+40);c.fillText('PHÙ HỢP',cx,cy+60);c.textAlign='left';
+  // stats
+  let y=P+290;
+  const stat=(x,w,n,t,bg)=>{rr(c,x,y,w,110,24);c.fillStyle='#fff';c.fill();c.strokeStyle='#ECE4DA';c.lineWidth=2;c.stroke();
+    rr(c,x+20,y+24,62,62,18);c.fillStyle=bg;c.fill();c.fillStyle='#232323';c.font='bold 44px Arial';c.fillText(n,x+100,y+62);
+    c.font='22px Arial';c.fillStyle='#7A7570';c.fillText(t,x+100,y+92)};
+  const half=(W-2*P-20)/2;
+  if(r1){stat(P,half,String(changed),'tình huống đã đổi ý','#FFF6E0');stat(P+half+20,half,String(Q.length-changed),'tình huống giữ nguyên','#E8F6EF');
+    c.font='bold 30px Arial';c.textAlign='center';c.fillStyle='#A26A00';c.fillText('↺',P+51,y+66);c.fillStyle='#1F8A62';c.fillText('✓',P+half+71,y+66);c.textAlign='left'}
+  else{rr(c,P,y,W-2*P,110,24);c.fillStyle='#fff';c.fill();c.fillStyle='#7A7570';c.font='24px Arial';c.fillText('Thiết bị này chưa lưu kết quả Lần 1 để so sánh.',P+30,y+64)}
+  y+=172;
+  c.fillStyle='#232323';c.font='bold 30px Arial';c.fillText('Nhìn lại 5 tình huống',P,y);y+=30;
+  Q.forEach((q,k)=>{const ok=r2[k]===q.k,chg=r1&&r1[k]!==r2[k],h=itemH[k];
+    rr(c,P,y,W-2*P,h,24);c.fillStyle='#fff';c.fill();c.strokeStyle=ok?'#CFEBDD':'#F6D9A8';c.lineWidth=2;c.stroke();
+    c.fillStyle=ok?'#1F8A62':'#E9A21B';c.beginPath();c.arc(P+48,y+52,24,0,7);c.fill();
+    c.fillStyle='#fff';c.font='bold 26px Arial';c.textAlign='center';c.fillText(ok?'✓':'!',P+48,y+61);c.textAlign='left';
+    c.fillStyle='#232323';c.font='bold 30px Arial';lines[k].forEach((l,j)=>c.fillText(j?l:`${k+1}. ${l}`,P+92,y+62+j*38));
+    let px=P+92,py=y+40+lines[k].length*38;
+    if(r1)px+=pill(c,px,py,'Lần 1: '+(r1[k]==='A'?'Ổn':'Khoan'),'#F4EFE9','#7A7570')+10;
+    px+=pill(c,px,py,'Lần 2: '+(r2[k]==='A'?'Ổn':'Khoan'),'#F4EFE9','#232323')+10;
+    if(chg)pill(c,px,py,'↺ Đổi ý','#FFF6E0','#A26A00');
+    y+=h+18});
+  // closing
+  y+=12;rr(c,P,y,W-2*P,150,28);const g2=c.createLinearGradient(P,y,W-P,y+150);g2.addColorStop(0,'#E81B2E');g2.addColorStop(1,'#B5121F');c.fillStyle=g2;c.fill();
+  c.fillStyle='#fff';c.font='bold 28px Arial';wrapT(c,'Hiểu đúng quy định là nền tảng để anh chị yên tâm đồng hành và phục vụ khách hàng lâu dài.',W-2*P-80).forEach((l,j)=>c.fillText(l,P+40,y+64+j*40));
+  c.fillStyle='#7A7570';c.font='20px Arial';c.textAlign='center';c.fillText('Tài liệu huấn luyện, lưu hành nội bộ',W/2,H-36);c.textAlign='left';
+  return cv.toDataURL('image/png');
+}
+function openWrap(){SFX.tap();wrapURL=buildWrap();if(!wrapURL)return;$('wprev').innerHTML=`<img src="${wrapURL}" alt="Ảnh wrap-up Tưởng chừng vô hại">`;
+  $('wrapBg').classList.add('on');$('wrapSheet').classList.add('on')}
+function closeWrap(){$('wrapBg').classList.remove('on');$('wrapSheet').classList.remove('on')}
+function dlWrap(){if(!wrapURL)return;const a=document.createElement('a');a.href=wrapURL;a.download='Tuong_chung_vo_hai_wrapup.png';document.body.appendChild(a);a.click();a.remove();SFX.saved();toast('Đã tải ảnh wrap-up')}
+</script>
+</body>
+</html>
